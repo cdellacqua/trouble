@@ -74,6 +74,10 @@ export RUST_TEST_THREADS=1
 echo "Integration tests"
 cargo test --manifest-path host/Cargo.toml --features log --test '*' -- --nocapture
 
+# `runner` needs `security`: without it the event handler it exercises compiles to a no-op. Run as
+# its own invocation so the feature set of the tests above is untouched.
+cargo test --manifest-path host/Cargo.toml --features log,security --test runner -- --nocapture
+
 echo "Example tests"
 
 export PROBE_CONFIG=$(jq --arg token "$HIL_TOKEN" '.server.token = $token' .ci/config.json)
